@@ -1,5 +1,13 @@
+//// remove comments
+//// move event listeners to top 
+//// SOOOO MANY LOOSEY GOOSEY EQUALS! 😱
+//// lots of unnamed functions that should be named 
+//// need save button to be disabled if no title and/or no input
+
 //Local Variables
 var ideas = [];
+
+////maybe not necessary since localStorageKey and the string 'loaclStorageKey' is basically the same. 
 var localStorageKey = "localStorageKey";
 
 //On load
@@ -23,6 +31,8 @@ function saveIdea() {
   var idNumber = new IdeaObjectCreator(saveIdeaTitle, saveIdeaBody);
   ideas.push(idNumber);
   console.log(ideas);
+
+  //// move below into function since you run it multiple times
   var stringIdeas = JSON.stringify(ideas);
   localStorage.setItem(localStorageKey, stringIdeas);
 }
@@ -78,6 +88,7 @@ function clearInputs() {
 }
 
 function deleteIdea() {
+  //// below seems a little aggressive with the multiple .parents. prob a better way
   var grandParentId = $(this).parent().parent().attr('id');
   for (var i = 0; i < ideas.length; i++) {
     var ideaId = ideas[i].id
@@ -87,17 +98,24 @@ function deleteIdea() {
       localStorage.setItem(localStorageKey, stringIdeas);
     }
   }
+
+  //// very close to grandParentId line above, maybe do variable for getting this element and manipulating it. 
   $(this).parent().parent().remove();
 }
 
 // Arrow button functionality
+//// unnamed function! Should pull out and rename. 
 $('#idea-placement').on('click', '.up-arrow', function() {
+
+  ////this event listener is very confusing. 
   var thisIdeaQuality = $(this).closest('div').siblings('p').children(
     'span');
   upVoteIdea(thisIdeaQuality);
 });
 
 function upVoteIdea(ideaQuality) {
+
+  //// LOOSEY GOOSEY EQUALS! 😱
   if (ideaQuality.text() == 'swill') {
     ideaQuality.text('plausible');
   } else if (ideaQuality.text() == 'plausible') {
@@ -105,6 +123,7 @@ function upVoteIdea(ideaQuality) {
   }
 }
 
+//// unnamed function!
 $('#idea-placement').on('click', '.down-arrow', function() {
   var thisIdeaQuality = $(this).siblings('p').children('span');
   downVoteIdea(thisIdeaQuality);
@@ -118,6 +137,8 @@ function downVoteIdea(ideaQuality) {
   }
 }
 
+
+//// this function seems to be doing extra work - you already checked the conditional in the DOM, you just need to replace it in local storage
 function upVoteIdeaStorage(ideaQuality) {
   var grandParentId = $(this).parent()[0].id;
   for (var i = 0; i < ideas.length; i++) {
@@ -132,6 +153,8 @@ function upVoteIdeaStorage(ideaQuality) {
   }
 }
 
+
+//// same as above: this if/else if doesn't need to happen again
 function downVoteIdeaStorage() {
   var grandParentId = $(this).parent()[0].id;
   for (var i = 0; i < ideas.length; i++) {
@@ -147,6 +170,7 @@ function downVoteIdeaStorage() {
 }
 
 //Search function and Event
+//// OMG unnamed function inception! get that outta here 👋
 $('#search-field').on('keyup', function() {
   var searchInput = $('#search-field').val();
   var searcher = new RegExp(searchInput, 'gim');
@@ -163,6 +187,7 @@ $('#search-field').on('keyup', function() {
 });
 
 // Editable
+//// Editable doesn't work on enter key - only on click or tab out
 $('#idea-placement').on('blur', '.entry-title', function(e) {
     var newTitle = $(this).text();
     editableTitle(this, newTitle);
@@ -186,6 +211,7 @@ $('#idea-placement').on('blur', '.entry-body', function(e) {
     editableBody(this, newBody);
 });
 
+//// this function is super similar to the one above, seems like we could pass in an extra param for either body or text to do both in one. 
 function editableBody(location, newText) {
     var objectId = $(location).parent().attr('id');
     ideas = JSON.parse(localStorage.getItem(localStorageKey));
@@ -200,6 +226,7 @@ function editableBody(location, newText) {
 }
 
 // Expanding Text Area
+//// do this with the css/html 
 var expandingTextArea = (function(){
   var textAreaTag = document.querySelectorAll('textarea')
   for (var i=0; i<textAreaTag.length; i++){
