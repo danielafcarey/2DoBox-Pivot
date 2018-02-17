@@ -1,10 +1,9 @@
-//// remove comments
-//// move event listeners to top 
-//// SOOOO MANY LOOSEY GOOSEY EQUALS! 😱
-//// lots of unnamed functions that should be named 
-//// need save button to be disabled if no title and/or no input
 
-$('#save-btn').on('click', attachTemplate);
+//// remove comments
+//// SOOOO MANY LOOSEY GOOSEY EQUALS! 😱
+//// save button to be disabled if no title and/or no input
+
+$('#save-btn').on('click', createCard);
 $('#idea-placement').on('click', '.delete-button', deleteIdea);
 $('#idea-placement').on('click', '.up-arrow', upVoteIdeaStorage);
 $('#idea-placement').on('click', '.down-arrow', downVoteIdeaStorage);
@@ -13,16 +12,13 @@ $('#idea-placement').on('click', '.down-arrow', downVoteIdea);
 $('#idea-placement').on('blur', '.entry-title', editableTitle);
 $('#idea-placement').on('blur', '.entry-body', editableBody); 
 $('#search-field').on('keyup', search);
-//Local Variables
-var ideas = [];
-
-////maybe not necessary since localStorageKey and the string 'loaclStorageKey' is basically the same. 
-var localStorageKey = "localStorageKey";
 
 //On load
 $(document).ready(function() {
-  grabIdea();
-  createTemplate();
+  getIdeaFromStorage();
+  ideas.forEach(function(object) {
+    prependCard(object);
+  });
 })
 
 //Idea constructor
@@ -34,63 +30,47 @@ function IdeaObjectCreator(saveIdeaTitle, saveIdeaBody) {
 }
 
 // Saves idea and updates local storage array
-function saveIdea() {
+function createCard() {
   var saveIdeaTitle = $('#title-field').val();
   var saveIdeaBody = $('#body-field').val();
   var idNumber = new IdeaObjectCreator(saveIdeaTitle, saveIdeaBody);
   ideas.push(idNumber);
-  console.log(ideas);
 
-  //// move below into function since you run it multiple times
-  var stringIdeas = JSON.stringify(ideas);
-  localStorage.setItem(localStorageKey, stringIdeas);
+  setInLocalStorage(ideas)
+  prependCard(ideas)
 }
 
-//Grabs idea out of local storage and updates array
-function grabIdea() {
-  var storedIdea = localStorage.getItem(localStorageKey);
+function setInLocalStorage(ideas) {
+  localStorage.setItem('localStorageKey', JSON.stringify(ideas));
+}
+
+function getIdeaFromStorage() {
+  var storedIdea = localStorage.getItem('localStorageKey');
   var parsedIdea = JSON.parse(storedIdea);
-  console.log(parsedIdea);
-  ideas = parsedIdea || [];
+  ideas = parsedIdea;
 }
 
-//Event Listeners
+function prependCard(object) {
+  $('#idea-placement').prepend(
+    `
+    <article aria-label="Idea card" class="object-container" id="${object.id}">
+      <div class="flex-container">
+        <h2 class="entry-title" contenteditable="true">${object.title}</h2>
+        <div role="button" class="delete-button"></div>
+      </div>
+      <p class="entry-body" contenteditable="true">${object.body}</p>
+      <div role="button" class="up-arrow" alt="upvote button"></div>
+      <div role="button" class="down-arrow" alt="downvote button"></div>
+      <p class="quality-rank">quality: <span class="open-sans">${object.quality}</span></p>
+    </article>`
+  );
+};  
 
-// Template creator
-function createTemplate() {
-  $('#idea-placement').html('');
-  ideas.forEach(function(object) {
-    $('#idea-placement').prepend(
-      `
-      <article aria-label="Idea card" class="object-container" id="${object.id}">
-        <div class="flex-container">
-          <h2 class="entry-title" contenteditable="true">${object.title}</h2>
-          <div role="button" class="delete-button"></div>
-        </div>
-        <p class="entry-body" contenteditable="true">${object.body}</p>
-        <div role="button" class="up-arrow" alt="upvote button"></div>
-        <div role="button" class="down-arrow" alt="downvote button"></div>
-        <p class="quality-rank">quality: <span class="open-sans">${object.quality}</span></p>
-      </article>`
-    );
-  });
-}
-
-// prepend the template function
-function attachTemplate() {
-  event.preventDefault();
-  saveIdea();
-  grabIdea();
-  createTemplate();
-  clearInputs();
-}
-
-// clear inputs
-function clearInputs() {
-  $('#title-field').val('');
-  $('#body-field').val('');
-  $('#title-field').focus();
-}
+// function clearInputs() {
+//   $('#title-field').val('');
+//   $('#body-field').val('');
+//   $('#title-field').focus();
+// }
 
 function deleteIdea() {
   //// below seems a little aggressive with the multiple .parents. prob a better way
@@ -100,7 +80,7 @@ function deleteIdea() {
     if (grandParentId == ideaId) {
       ideas.splice(i, 1);
       var stringIdeas = JSON.stringify(ideas);
-      localStorage.setItem(localStorageKey, stringIdeas);
+      localStorage.setItem('localStorageKey', stringIdeas);
     }
   }
 
@@ -145,7 +125,7 @@ function upVoteIdeaStorage(ideaQuality) {
       ideas[i].quality = 'genius';
     }
     var stringIdeas = JSON.stringify(ideas);
-    localStorage.setItem(localStorageKey, stringIdeas);
+    localStorage.setItem('localStorageKey', stringIdeas);
   }
 }
 
@@ -161,7 +141,7 @@ function downVoteIdeaStorage() {
       ideas[i].quality = 'swill';
     }
     var stringIdeas = JSON.stringify(ideas);
-    localStorage.setItem(localStorageKey, stringIdeas);
+    localStorage.setItem('localStorageKey', stringIdeas);
   }
 }
 
@@ -189,7 +169,7 @@ function search() {
 function editableTitle() {
     var newTitle = $(this).text();
     var objectId = $(this).parent().parent().attr('id');
-    ideas = JSON.parse(localStorage.getItem(localStorageKey));
+    ideas = JSON.parse(localStorage.getItem('localStorageKey'));
     ideas.forEach(function(object) {
         if (object.id == objectId) {
             object.title = newTitle;
@@ -197,14 +177,14 @@ function editableTitle() {
         }
     });
     stringIdeas = JSON.stringify(ideas);
-    localStorage.setItem(localStorageKey, stringIdeas);
+    localStorage.setItem('localStorageKey', stringIdeas);
 }
 
 //// this function is super similar to the one above, seems like we could pass in an extra param for either body or text to do both in one. 
 function editableBody() {
     var newBody = $(this).text();
     var objectId = $(this).parent().attr('id');
-    ideas = JSON.parse(localStorage.getItem(localStorageKey));
+    ideas = JSON.parse(localStorage.getItem('localStorageKey'));
     ideas.forEach(function(object) {
         if (object.id == objectId) {
             object.body = newBody;
@@ -212,7 +192,7 @@ function editableBody() {
         }
     });
     stringIdeas = JSON.stringify(ideas);
-    localStorage.setItem(localStorageKey, stringIdeas);
+    localStorage.setItem('localStorageKey', stringIdeas);
 }
 
 // Expanding Text Area
@@ -230,3 +210,14 @@ var expandingTextArea = (function(){
     el.style.height = el.scrollHeight+'px';
   }
 })()
+
+
+//// DON'T NEED THIS FUNCTION
+// function attachTemplate(event) {
+//   event.preventDefault();
+//   createCard();
+//   // getIdeaFromStorage();
+//   // prependCard();
+//   clearInputs();
+//   console.log('attach template ran');
+// }
