@@ -4,6 +4,15 @@
 //// lots of unnamed functions that should be named 
 //// need save button to be disabled if no title and/or no input
 
+$('#save-btn').on('click', attachTemplate);
+$('#idea-placement').on('click', '.delete-button', deleteIdea);
+$('#idea-placement').on('click', '.up-arrow', upVoteIdeaStorage);
+$('#idea-placement').on('click', '.down-arrow', downVoteIdeaStorage);
+$('#idea-placement').on('click', '.up-arrow', upVoteIdea); 
+$('#idea-placement').on('click', '.down-arrow', downVoteIdea); 
+$('#idea-placement').on('blur', '.entry-title', editableTitle);
+$('#idea-placement').on('blur', '.entry-body', editableBody); 
+$('#search-field').on('keyup', search);
 //Local Variables
 var ideas = [];
 
@@ -46,10 +55,6 @@ function grabIdea() {
 }
 
 //Event Listeners
-$('#save-btn').on('click', attachTemplate);
-$('#idea-placement').on('click', '.delete-button', deleteIdea);
-$('#idea-placement').on('click', '.up-arrow', upVoteIdeaStorage);
-$('#idea-placement').on('click', '.down-arrow', downVoteIdeaStorage);
 
 // Template creator
 function createTemplate() {
@@ -105,16 +110,10 @@ function deleteIdea() {
 
 // Arrow button functionality
 //// unnamed function! Should pull out and rename. 
-$('#idea-placement').on('click', '.up-arrow', function() {
 
-  ////this event listener is very confusing. 
-  var thisIdeaQuality = $(this).closest('div').siblings('p').children(
+function upVoteIdea() {
+  var ideaQuality = $(this).closest('div').siblings('p').children(
     'span');
-  upVoteIdea(thisIdeaQuality);
-});
-
-function upVoteIdea(ideaQuality) {
-
   //// LOOSEY GOOSEY EQUALS! 😱
   if (ideaQuality.text() == 'swill') {
     ideaQuality.text('plausible');
@@ -124,12 +123,9 @@ function upVoteIdea(ideaQuality) {
 }
 
 //// unnamed function!
-$('#idea-placement').on('click', '.down-arrow', function() {
-  var thisIdeaQuality = $(this).siblings('p').children('span');
-  downVoteIdea(thisIdeaQuality);
-});
 
-function downVoteIdea(ideaQuality) {
+function downVoteIdea() {
+  var ideaQuality = $(this).siblings('p').children('span');
   if (ideaQuality.text() == 'genius') {
     ideaQuality.text('plausible');
   } else if (ideaQuality.text() == 'plausible') {
@@ -171,7 +167,8 @@ function downVoteIdeaStorage() {
 
 //Search function and Event
 //// OMG unnamed function inception! get that outta here 👋
-$('#search-field').on('keyup', function() {
+
+function search() {
   var searchInput = $('#search-field').val();
   var searcher = new RegExp(searchInput, 'gim');
   $('.object-container').each(function() {
@@ -184,21 +181,18 @@ $('#search-field').on('keyup', function() {
       $(this).show();
     }
   })
-});
+};
 
 // Editable
 //// Editable doesn't work on enter key - only on click or tab out
-$('#idea-placement').on('blur', '.entry-title', function(e) {
-    var newTitle = $(this).text();
-    editableTitle(this, newTitle);
-});
 
-function editableTitle(location, newText) {
-    var objectId = $(location).parent().parent().attr('id');
+function editableTitle() {
+    var newTitle = $(this).text();
+    var objectId = $(this).parent().parent().attr('id');
     ideas = JSON.parse(localStorage.getItem(localStorageKey));
     ideas.forEach(function(object) {
         if (object.id == objectId) {
-            object.title = newText;
+            object.title = newTitle;
             return object.title;
         }
     });
@@ -206,18 +200,14 @@ function editableTitle(location, newText) {
     localStorage.setItem(localStorageKey, stringIdeas);
 }
 
-$('#idea-placement').on('blur', '.entry-body', function(e) {
-    var newBody = $(this).text();
-    editableBody(this, newBody);
-});
-
 //// this function is super similar to the one above, seems like we could pass in an extra param for either body or text to do both in one. 
-function editableBody(location, newText) {
-    var objectId = $(location).parent().attr('id');
+function editableBody() {
+    var newBody = $(this).text();
+    var objectId = $(this).parent().attr('id');
     ideas = JSON.parse(localStorage.getItem(localStorageKey));
     ideas.forEach(function(object) {
         if (object.id == objectId) {
-            object.body = newText;
+            object.body = newBody;
             return object.body;
         }
     });
