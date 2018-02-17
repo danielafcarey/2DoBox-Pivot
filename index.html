@@ -10,14 +10,20 @@
   <body>
     <header>
       <form>
+        <!-- Change this logo to h1 with span -->
         <img class="logo" src="images/ideabox-logo.svg" alt="ideabox logo">
+        <!-- placeholders not to spec, but I kinda think it's better UI (if we do keep, get rid of periods) -->
+        <!-- Add aria-labels -->
         <input class="input-fields" id="title-field" type="text" name="title field" placeholder="Title of your idea." aria-required="true">
-        <textarea class="input-fields" id="body-field" type="text" name="" placeholder="Write your idea here." aria-required="true"> </textarea>
+        <!-- Empty name attribute -->
+        <textarea class="input-fields" id="body-field" type="text" name="" placeholder="Write your idea here." aria-required="true"></textarea>
         <input class="save-button" id="save-btn" type="submit" name="" value="save">
       </form>
     </header>
     <section class="search-section">
+      <!-- "Wrapper" is a vague class name -->
       <article class="wrapper">
+        <!-- Empty name attribute -->
         <input id="search-field" class="input-fields" type="text" name="" placeholder="Search ideas">
       </article>
     </section>
@@ -26,6 +32,7 @@
       </article>
     </section>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <!-- Should we put in the local jquery back up? -->
   <script src="scripts/ideabox.js"></script>
   </body>
 </html>

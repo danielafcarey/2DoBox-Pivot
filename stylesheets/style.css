@@ -1,9 +1,15 @@
-/*standard elements*/
+/*Reorder CSS*/
+/*fix for long title*/
+/*button > btn*/
+
+
 * { 
   box-sizing: border-box; 
 }
 
+/*Switch this to class name or add comment so it's clar what it is*/
 article {
+  /*Should not be bottom border/hr based on spec*/
   border-bottom: solid 1px #D1D3D4;
   width:100%;
 }
@@ -28,6 +34,7 @@ input {
   color: #6D6E71;
 }
 
+/*Placeholder text not to spec - size and weight*/
 input::placeholder {
   opacity: .5;
 }
@@ -98,6 +105,7 @@ textarea::placeholder {
   border: none;
   box-shadow: 0px 4px 16px -5px rgba(0,0,0,0.75);
   color: #FFFFFF;
+  /*It should have sans-serif font*/
   font-family:'Roboto Slab', serif;
   font-size: 20px;
   height: 40px;
@@ -139,6 +147,7 @@ textarea::placeholder {
   width: 50%;
 }
 
+/*Not aligned with vote buttons*/
 .quality-rank {
   display: inline-block;
   font-family:'Roboto Slab', serif;
@@ -146,11 +155,16 @@ textarea::placeholder {
   margin-bottom: 15px;
 } 
 
+/*fix this styling/class-naming*/
 .open-sans {
   font-family: 'Open Sans', sans-serif;
 }
 
+
 /*Media queries*/
+/*I think this many queries is unnecessary - causes weird UI with the breakpoints*/
+
+/*1024 (ipad Pro) view is a little zoomed out*/
 @media only screen and (max-width: 1000px) {
   .wrapper {
     width: 65%;
