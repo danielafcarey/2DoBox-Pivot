@@ -13,41 +13,44 @@ $('#idea-placement').on('blur', '.entry-title', editableTitle);
 $('#idea-placement').on('blur', '.entry-body', editableBody); 
 $('#search-field').on('keyup', search);
 
-//On load
+//On load (should we condense variabeles)
 $(document).ready(function() {
-  getIdeaFromStorage();
-  ideas.forEach(function(object) {
-    prependCard(object);
-  });
+  for (var i = 0; i < localStorage.length; i++) {
+  var retrievedIdeas = localStorage.getItem(localStorage.key(i));
+  var parsedIdeas = JSON.parse(retrievedIdeas);
+  prependCard(parsedIdeas);
+  };
 })
 
 //Idea constructor
-function IdeaObjectCreator(saveIdeaTitle, saveIdeaBody) {
-  this.title = saveIdeaTitle;
-  this.body = saveIdeaBody;
+function IdeaObjectCreator(title, body) {
+  this.title = title;
+  this.body = body;
   this.quality = 'swill';
   this.id = Date.now();
 }
 
 // Saves idea and updates local storage array
-function createCard() {
-  var saveIdeaTitle = $('#title-field').val();
-  var saveIdeaBody = $('#body-field').val();
-  var idNumber = new IdeaObjectCreator(saveIdeaTitle, saveIdeaBody);
-  ideas.push(idNumber);
-
-  setInLocalStorage(ideas)
-  prependCard(ideas)
+function createCard(event) {
+  event.preventDefault();
+  var inputTitleValue = $('#title-field').val();
+  var inputBodyValue = $('#body-field').val();
+  var ideaObject = new IdeaObjectCreator(inputTitleValue, inputBodyValue);
+  setInLocalStorage(ideaObject.id, ideaObject);
+  prependCard(ideaObject);
+  clearInputs();
 }
 
-function setInLocalStorage(ideas) {
-  localStorage.setItem('localStorageKey', JSON.stringify(ideas));
+// Set/retrieve local storage. Should we shorten?
+function setInLocalStorage(cardId, updatedIdeaObject) {
+  var stringifiedIdea = JSON.stringify(updatedIdeaObject);
+  localStorage.setItem(cardId, stringifiedIdea);
 }
 
-function getIdeaFromStorage() {
-  var storedIdea = localStorage.getItem('localStorageKey');
-  var parsedIdea = JSON.parse(storedIdea);
-  ideas = parsedIdea;
+function getIdeaFromStorage(cardId) {
+  var retrievedIdeas = localStorage.getItem(cardId);
+  var parsedIdeas = JSON.parse(retrievedIdeas);
+  return parsedIdeas;
 }
 
 function prependCard(object) {
@@ -66,30 +69,19 @@ function prependCard(object) {
   );
 };  
 
-// function clearInputs() {
-//   $('#title-field').val('');
-//   $('#body-field').val('');
-//   $('#title-field').focus();
-// }
-
-function deleteIdea() {
-  //// below seems a little aggressive with the multiple .parents. prob a better way
-  var grandParentId = $(this).parent().parent().attr('id');
-  for (var i = 0; i < ideas.length; i++) {
-    var ideaId = ideas[i].id
-    if (grandParentId == ideaId) {
-      ideas.splice(i, 1);
-      var stringIdeas = JSON.stringify(ideas);
-      localStorage.setItem('localStorageKey', stringIdeas);
-    }
-  }
-
-  //// very close to grandParentId line above, maybe do variable for getting this element and manipulating it. 
-  $(this).parent().parent().remove();
+function clearInputs() {
+  $('#title-field').val('');
+  $('#body-field').val('');
+  $('#title-field').focus();
 }
 
-// Arrow button functionality
-//// unnamed function! Should pull out and rename. 
+function deleteIdea() {
+  var cardId = $(this).parent().parent().attr('id');
+  localStorage.removeItem(cardId);
+  $(this).closest('article').remove();
+}
+
+ 
 
 function upVoteIdea() {
   var ideaQuality = $(this).closest('div').siblings('p').children(
@@ -101,8 +93,6 @@ function upVoteIdea() {
     ideaQuality.text('genius');
   }
 }
-
-//// unnamed function!
 
 function downVoteIdea() {
   var ideaQuality = $(this).siblings('p').children('span');
@@ -124,8 +114,7 @@ function upVoteIdeaStorage(ideaQuality) {
     } else if (grandParentId == ideaId && ideas[i].quality == 'plausible') {
       ideas[i].quality = 'genius';
     }
-    var stringIdeas = JSON.stringify(ideas);
-    localStorage.setItem('localStorageKey', stringIdeas);
+    setInLocalStorage(ideas)
   }
 }
 
@@ -140,8 +129,7 @@ function downVoteIdeaStorage() {
     } else if (grandParentId == ideaId && ideas[i].quality == 'plausible') {
       ideas[i].quality = 'swill';
     }
-    var stringIdeas = JSON.stringify(ideas);
-    localStorage.setItem('localStorageKey', stringIdeas);
+    setInLocalStorage(ideas)
   }
 }
 
@@ -176,8 +164,7 @@ function editableTitle() {
             return object.title;
         }
     });
-    stringIdeas = JSON.stringify(ideas);
-    localStorage.setItem('localStorageKey', stringIdeas);
+    setInLocalStorage(ideas)
 }
 
 //// this function is super similar to the one above, seems like we could pass in an extra param for either body or text to do both in one. 
@@ -191,25 +178,24 @@ function editableBody() {
             return object.body;
         }
     });
-    stringIdeas = JSON.stringify(ideas);
-    localStorage.setItem('localStorageKey', stringIdeas);
+    setInLocalStorage(ideas)
 }
 
 // Expanding Text Area
 //// do this with the css/html 
-var expandingTextArea = (function(){
-  var textAreaTag = document.querySelectorAll('textarea')
-  for (var i=0; i<textAreaTag.length; i++){
-    textAreaTag[i].addEventListener('paste',autoExpand);
-    textAreaTag[i].addEventListener('input',autoExpand);
-    textAreaTag[i].addEventListener('keyup',autoExpand);
-  }
-  function autoExpand(e,el){
-    var el = el || e.target;
-    el.style.height = 'inherit';
-    el.style.height = el.scrollHeight+'px';
-  }
-})()
+// var expandingTextArea = (function(){
+//   var textAreaTag = document.querySelectorAll('textarea')
+//   for (var i=0; i<textAreaTag.length; i++){
+//     textAreaTag[i].addEventListener('paste',autoExpand);
+//     textAreaTag[i].addEventListener('input',autoExpand);
+//     textAreaTag[i].addEventListener('keyup',autoExpand);
+//   }
+//   function autoExpand(e,el){
+//     var el = el || e.target;
+//     el.style.height = 'inherit';
+//     el.style.height = el.scrollHeight+'px';
+//   }
+// })
 
 
 //// DON'T NEED THIS FUNCTION
