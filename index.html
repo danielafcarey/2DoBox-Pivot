@@ -12,11 +12,10 @@
       <form>
         <!-- Change this logo to h1 with span -->
         <img class="logo" src="images/ideabox-logo.svg" alt="ideabox logo">
-        <!-- placeholders not to spec, but I kinda think it's better UI (if we do keep, get rid of periods) -->
         <!-- Add aria-labels -->
-        <input class="input-fields" id="title-field" type="text" name="title field" placeholder="Title of your idea." aria-required="true">
+        <input class="input-fields" id="title-field" type="text" name="titleInput" placeholder="Title of your idea" aria-required="true" aria-label="Idea title">
         <!-- Empty name attribute -->
-        <textarea class="input-fields" id="body-field" type="text" name="" placeholder="Write your idea here." aria-required="true"></textarea>
+        <textarea class="input-fields" id="body-field" type="text" name="bodyInput" placeholder="Write your idea here" aria-required="true" aria-label="Idea body"></textarea>
         <input class="save-button" id="save-btn" type="submit" name="" value="save">
       </form>
     </header>
