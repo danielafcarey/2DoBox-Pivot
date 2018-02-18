@@ -7,14 +7,7 @@
   box-sizing: border-box; 
 }
 
-/*Switch this to class name or add comment so it's clar what it is*/
-article {
-  /*Should not be bottom border/hr based on spec*/
-  border-bottom: solid 1px #D1D3D4;
-  width:100%;
-}
-
-form {
+.todo-form {
   margin: auto;
   width: 50%;
 }
@@ -136,7 +129,7 @@ textarea::placeholder {
   width: 50%;
 }
 
-.search-section {
+.filter-section {
   padding: 30px 30px 0px 30px;
 }
 .idea-section {
@@ -169,7 +162,7 @@ textarea::placeholder {
   .wrapper {
     width: 65%;
   }
-  form {
+  .todo-form {
     width: 65%;
   }
 }
@@ -178,7 +171,7 @@ textarea::placeholder {
   .wrapper {
     width: 80%;
   }
-  form {
+  .todo-form {
     width: 80%;
   }
 }
@@ -187,7 +180,7 @@ textarea::placeholder {
   .wrapper {
     width: 90%;
   }
-  form {
+  .todo-form {
     width: 90%;
   }
 }

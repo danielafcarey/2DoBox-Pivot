@@ -1,14 +1,12 @@
 
 //// save button to be disabled if no title and/or no input
-
 $('#save-btn').on('click', createCard);
 $('#idea-placement').on('click', '.delete-button', deleteIdea);
 $('#idea-placement').on('click', '.up-arrow', changeCardQuality); 
 $('#idea-placement').on('click', '.down-arrow', changeCardQuality); 
 $('#idea-placement').on('blur', '.entry-title', editableText);
 $('#idea-placement').on('blur', '.entry-body', editableText); 
-$('#search-field').on('keyup', search);
-
+$('#filter-field').on('keyup', search);
 //On load (should we condense variabeles?)
 $(document).ready(function() {
   for (var i = 0; i < localStorage.length; i++) {
@@ -17,36 +15,31 @@ $(document).ready(function() {
     prependCard(parsedIdeas);
   };
 })
-
 function IdeaObjectCreator(title, body) {
   this.title = title;
   this.body = body;
   this.quality = 'Normal';
   this.id = Date.now();
 }
-
 function createCard(event) {
   event.preventDefault();
   var inputTitleValue = $('#title-field').val();
-  var inputBodyValue = $('#body-field').val();
+  var inputBodyValue = $('#task-field').val();
   var ideaObject = new IdeaObjectCreator(inputTitleValue, inputBodyValue);
   setInLocalStorage(ideaObject.id, ideaObject);
   prependCard(ideaObject);
   clearInputs();
 }
-
 // Set/retrieve local storage. Should we shorten?
 function setInLocalStorage(cardId, updatedIdeaObject) {
   var stringifiedIdea = JSON.stringify(updatedIdeaObject);
   localStorage.setItem(cardId, stringifiedIdea);
 }
-
 function getIdeaFromStorage(cardId) {
   var retrievedIdeas = localStorage.getItem(cardId);
   var parsedIdeas = JSON.parse(retrievedIdeas);
   return parsedIdeas;
 }
-
 function prependCard(object) {
   $('#idea-placement').prepend(
     `<article aria-label="Idea card" class="object-container" id="${object.id}">
@@ -61,19 +54,16 @@ function prependCard(object) {
     </article>`
   );
 };  
-
 function clearInputs() {
   $('#title-field').val('');
-  $('#body-field').val('');
+  $('#task-field').val('');
   $('#title-field').focus();
 }
-
 function deleteIdea() {
   var cardId = $(this).parent().attr('id');
   localStorage.removeItem(cardId);
   $(this).closest('article').remove();
 }
-
 // fix this weird loop problem
 function getNewCardQuality(currentQuality, voteDirection) {
   var qualitiesArray = [
@@ -83,7 +73,6 @@ function getNewCardQuality(currentQuality, voteDirection) {
     'High',
     'Critical'
     ]
-
   var currentQualityIndex = qualitiesArray.indexOf(currentQuality);
   if (voteDirection === 'up-arrow') {
     return qualitiesArray[currentQualityIndex + 1]
@@ -91,7 +80,6 @@ function getNewCardQuality(currentQuality, voteDirection) {
     return qualitiesArray[currentQualityIndex - 1]
   }
 }
-
 function changeCardQuality() {
   var cardId = $(this).parents().attr('id'); //this is only used once so you can remove line to get under 8 lines
   var clickedBtn = $(this).attr('class');
@@ -104,8 +92,6 @@ function changeCardQuality() {
   setInLocalStorage(cardId, currentCard)
   $(this).siblings('p').children().text(currentCard.quality);
 }
-
-
 //// Editable doesn't work on enter key - only on click or tab out
 function editableText() {
   var newText = $(this).text()
@@ -119,9 +105,8 @@ function editableText() {
   }
   setInLocalStorage(cardId, currentCard)
 }
-
 function search() {
-  var searchInput = $('#search-field').val();
+  var searchInput = $('#filter-field').val();
   var searcher = new RegExp(searchInput, 'gim');
   $('.object-container').each(function() {
     var title = $(this).find(".entry-title").text();
@@ -134,4 +119,5 @@ function search() {
     }
   })
 };
+
 
