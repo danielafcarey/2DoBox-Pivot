@@ -5,10 +5,8 @@
 
 $('#save-btn').on('click', createCard);
 $('#idea-placement').on('click', '.delete-button', deleteIdea);
-$('#idea-placement').on('click', '.up-arrow', upVoteIdeaStorage);
-$('#idea-placement').on('click', '.down-arrow', downVoteIdeaStorage);
-$('#idea-placement').on('click', '.up-arrow', upVoteIdea); 
-$('#idea-placement').on('click', '.down-arrow', downVoteIdea); 
+$('#idea-placement').on('click', '.up-arrow', upvoteCardQuality); 
+$('#idea-placement').on('click', '.down-arrow', downvoteCardQuality); 
 $('#idea-placement').on('blur', '.entry-title', editableTitle);
 $('#idea-placement').on('blur', '.entry-body', editableBody); 
 $('#search-field').on('keyup', search);
@@ -20,13 +18,14 @@ $(document).ready(function() {
   var parsedIdeas = JSON.parse(retrievedIdeas);
   prependCard(parsedIdeas);
   };
+  // changeCardQuality();
 })
 
 //Idea constructor
 function IdeaObjectCreator(title, body) {
   this.title = title;
   this.body = body;
-  this.quality = 'swill';
+  this.quality = 'None';
   this.id = Date.now();
 }
 
@@ -55,8 +54,7 @@ function getIdeaFromStorage(cardId) {
 
 function prependCard(object) {
   $('#idea-placement').prepend(
-    `
-    <article aria-label="Idea card" class="object-container" id="${object.id}">
+    `<article aria-label="Idea card" class="object-container" id="${object.id}">
       <div class="flex-container">
         <h2 class="entry-title" contenteditable="true">${object.title}</h2>
         <div role="button" class="delete-button"></div>
@@ -64,7 +62,9 @@ function prependCard(object) {
       <p class="entry-body" contenteditable="true">${object.body}</p>
       <div role="button" class="up-arrow" alt="upvote button"></div>
       <div role="button" class="down-arrow" alt="downvote button"></div>
-      <p class="quality-rank">quality: <span class="open-sans">${object.quality}</span></p>
+      <p class="quality-rank">quality: 
+        <span class="open-sans">${object.quality}</span>
+      </p>
     </article>`
   );
 };  
@@ -81,56 +81,41 @@ function deleteIdea() {
   $(this).closest('article').remove();
 }
 
+function getNewCardQuality(currentQuality, voteDirection) {
+  var qualitiesArray = [
+    'None', 
+    'Low', 
+    'Normal',
+    'High',
+    'Critical'
+    ]
+
+  var currentQualityIndex = qualitiesArray.indexOf(currentQuality);
+  console.log(currentQualityIndex);
+  if ((voteDirection === 'upvote') && (0 <= currentQualityIndex <= 3)) {
+    console.log('up is true');
+    return qualitiesArray[currentQualityIndex + 1]
+  } else if ((voteDirection === 'downvote') && (currentQualityIndex > 0)) {
+    console.log('down is true');
+    return qualitiesArray[currentQualityIndex - 1]
+  }
+}
  
-
-function upVoteIdea() {
-  var ideaQuality = $(this).closest('div').siblings('p').children(
-    'span');
-  //// LOOSEY GOOSEY EQUALS! 😱
-  if (ideaQuality.text() == 'swill') {
-    ideaQuality.text('plausible');
-  } else if (ideaQuality.text() == 'plausible') {
-    ideaQuality.text('genius');
-  }
+function upvoteCardQuality() {
+  var cardId = $(this).parents().attr('id');
+  var currentCard = getIdeaFromStorage(cardId);
+  currentCard.quality = getNewCardQuality(currentCard.quality, 'upvote');
+  setInLocalStorage(cardId, currentCard)
+  $(this).siblings('p').children().text(currentCard.quality);
+  
 }
 
-function downVoteIdea() {
-  var ideaQuality = $(this).siblings('p').children('span');
-  if (ideaQuality.text() == 'genius') {
-    ideaQuality.text('plausible');
-  } else if (ideaQuality.text() == 'plausible') {
-    ideaQuality.text('swill');
-  }
-}
-
-
-//// this function seems to be doing extra work - you already checked the conditional in the DOM, you just need to replace it in local storage
-function upVoteIdeaStorage(ideaQuality) {
-  var grandParentId = $(this).parent()[0].id;
-  for (var i = 0; i < ideas.length; i++) {
-    var ideaId = ideas[i].id;
-    if (grandParentId == ideaId && ideas[i].quality == 'swill') {
-      ideas[i].quality = 'plausible';
-    } else if (grandParentId == ideaId && ideas[i].quality == 'plausible') {
-      ideas[i].quality = 'genius';
-    }
-    setInLocalStorage(ideas)
-  }
-}
-
-
-//// same as above: this if/else if doesn't need to happen again
-function downVoteIdeaStorage() {
-  var grandParentId = $(this).parent()[0].id;
-  for (var i = 0; i < ideas.length; i++) {
-    var ideaId = ideas[i].id;
-    if (grandParentId == ideaId && ideas[i].quality == 'genius') {
-      ideas[i].quality = 'plausible';
-    } else if (grandParentId == ideaId && ideas[i].quality == 'plausible') {
-      ideas[i].quality = 'swill';
-    }
-    setInLocalStorage(ideas)
-  }
+function downvoteCardQuality() {
+  var cardId = $(this).parents().attr('id');
+  var currentCard = getIdeaFromStorage(cardId);
+  currentCard.quality = getNewCardQuality(currentCard.quality, 'downvote');
+  setInLocalStorage(cardId, currentCard)
+  $(this).siblings('p').children().text(currentCard.quality);
 }
 
 //Search function and Event
@@ -151,34 +136,22 @@ function search() {
   })
 };
 
-// Editable
 //// Editable doesn't work on enter key - only on click or tab out
-
 function editableTitle() {
-    var newTitle = $(this).text();
-    var objectId = $(this).parent().parent().attr('id');
-    ideas = JSON.parse(localStorage.getItem('localStorageKey'));
-    ideas.forEach(function(object) {
-        if (object.id == objectId) {
-            object.title = newTitle;
-            return object.title;
-        }
-    });
-    setInLocalStorage(ideas)
+  var newTitle = $(this).text();
+  var cardId = $(this).parent().parent().attr('id');
+  var currentCard = getIdeaFromStorage(cardId)
+  currentCard.title = newTitle
+  setInLocalStorage(cardId, currentCard)
 }
 
 //// this function is super similar to the one above, seems like we could pass in an extra param for either body or text to do both in one. 
 function editableBody() {
-    var newBody = $(this).text();
-    var objectId = $(this).parent().attr('id');
-    ideas = JSON.parse(localStorage.getItem('localStorageKey'));
-    ideas.forEach(function(object) {
-        if (object.id == objectId) {
-            object.body = newBody;
-            return object.body;
-        }
-    });
-    setInLocalStorage(ideas)
+  var newBody = $(this).text();
+  var cardId = $(this).parent().attr('id');
+  var currentCard = getIdeaFromStorage(cardId)
+  currentCard.body = newBody
+  setInLocalStorage(cardId, currentCard)
 }
 
 // Expanding Text Area
