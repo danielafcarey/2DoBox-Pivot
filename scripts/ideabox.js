@@ -1,6 +1,4 @@
 
-//// remove comments
-//// SOOOO MANY LOOSEY GOOSEY EQUALS! 😱
 //// save button to be disabled if no title and/or no input
 
 $('#save-btn').on('click', createCard);
@@ -11,17 +9,15 @@ $('#idea-placement').on('blur', '.entry-title', editableTitle);
 $('#idea-placement').on('blur', '.entry-body', editableBody); 
 $('#search-field').on('keyup', search);
 
-//On load (should we condense variabeles)
+//On load (should we condense variabeles?)
 $(document).ready(function() {
   for (var i = 0; i < localStorage.length; i++) {
-  var retrievedIdeas = localStorage.getItem(localStorage.key(i));
-  var parsedIdeas = JSON.parse(retrievedIdeas);
-  prependCard(parsedIdeas);
+    var retrievedIdeas = localStorage.getItem(localStorage.key(i));
+    var parsedIdeas = JSON.parse(retrievedIdeas);
+    prependCard(parsedIdeas);
   };
-  // changeCardQuality();
 })
 
-//Idea constructor
 function IdeaObjectCreator(title, body) {
   this.title = title;
   this.body = body;
@@ -29,7 +25,6 @@ function IdeaObjectCreator(title, body) {
   this.id = Date.now();
 }
 
-// Saves idea and updates local storage array
 function createCard(event) {
   event.preventDefault();
   var inputTitleValue = $('#title-field').val();
@@ -81,6 +76,7 @@ function deleteIdea() {
   $(this).closest('article').remove();
 }
 
+// fix this weird loop problem
 function getNewCardQuality(currentQuality, voteDirection) {
   var qualitiesArray = [
     'None', 
@@ -91,12 +87,9 @@ function getNewCardQuality(currentQuality, voteDirection) {
     ]
 
   var currentQualityIndex = qualitiesArray.indexOf(currentQuality);
-  console.log(currentQualityIndex);
-  if ((voteDirection === 'upvote') && (0 <= currentQualityIndex <= 3)) {
-    console.log('up is true');
+  if (voteDirection === 'upvote') {
     return qualitiesArray[currentQualityIndex + 1]
-  } else if ((voteDirection === 'downvote') && (currentQualityIndex > 0)) {
-    console.log('down is true');
+  } else if (voteDirection === 'downvote') {
     return qualitiesArray[currentQualityIndex - 1]
   }
 }
@@ -104,22 +97,26 @@ function getNewCardQuality(currentQuality, voteDirection) {
 function upvoteCardQuality() {
   var cardId = $(this).parents().attr('id');
   var currentCard = getIdeaFromStorage(cardId);
-  currentCard.quality = getNewCardQuality(currentCard.quality, 'upvote');
+
+  if (currentCard.quality !== 'Critical') {
+    currentCard.quality = getNewCardQuality(currentCard.quality, 'upvote');
+  }
+
   setInLocalStorage(cardId, currentCard)
   $(this).siblings('p').children().text(currentCard.quality);
-  
 }
 
 function downvoteCardQuality() {
   var cardId = $(this).parents().attr('id');
   var currentCard = getIdeaFromStorage(cardId);
-  currentCard.quality = getNewCardQuality(currentCard.quality, 'downvote');
+
+  if (currentCard.quality !== 'None') {
+    currentCard.quality = getNewCardQuality(currentCard.quality, 'downvote');
+  }
+  
   setInLocalStorage(cardId, currentCard)
   $(this).siblings('p').children().text(currentCard.quality);
 }
-
-//Search function and Event
-//// OMG unnamed function inception! get that outta here 👋
 
 function search() {
   var searchInput = $('#search-field').val();
@@ -169,14 +166,3 @@ function editableBody() {
 //     el.style.height = el.scrollHeight+'px';
 //   }
 // })
-
-
-//// DON'T NEED THIS FUNCTION
-// function attachTemplate(event) {
-//   event.preventDefault();
-//   createCard();
-//   // getIdeaFromStorage();
-//   // prependCard();
-//   clearInputs();
-//   console.log('attach template ran');
-// }
