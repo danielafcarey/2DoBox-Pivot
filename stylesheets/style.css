@@ -112,6 +112,10 @@ textarea::placeholder {
   background-color: #045E55;
 }
 
+.save-button:disabled {
+  background-color: gray;
+}
+
 .input-fields {
   border: solid 2px #D1D3D4;
   display: block;
