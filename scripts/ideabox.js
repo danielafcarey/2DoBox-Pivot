@@ -7,6 +7,16 @@ $('#idea-placement').on('click', '.down-arrow', changeCardQuality);
 $('#idea-placement').on('blur', '.entry-title', editableText);
 $('#idea-placement').on('blur', '.entry-body', editableText); 
 $('#filter-field').on('keyup', search);
+$('.todo-input').on('keyup', enableBtn);
+
+function enableBtn() {
+  if ($('#title-field').val() !== '' && $('#task-field').val() !== '') {
+    $('#save-btn').attr('disabled', false)
+  } else {
+    $('#save-btn').attr('disabled', true)
+  }
+}
+
 //On load (should we condense variabeles?)
 $(document).ready(function() {
   for (var i = 0; i < localStorage.length; i++) {
@@ -58,6 +68,7 @@ function clearInputs() {
   $('#title-field').val('');
   $('#task-field').val('');
   $('#title-field').focus();
+  $('#save-btn').attr('disabled', true)
 }
 function deleteIdea() {
   var cardId = $(this).parent().attr('id');
