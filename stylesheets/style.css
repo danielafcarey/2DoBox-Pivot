@@ -152,7 +152,7 @@ textarea::placeholder {
 }
 
 /*Not aligned with vote buttons*/
-.quality-rank {
+.importance-rank {
   display: inline-block;
   font-family:'Roboto Slab', serif;
   font-size: 18px;
