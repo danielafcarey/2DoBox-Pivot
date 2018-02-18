@@ -5,8 +5,8 @@ $('#save-btn').on('click', createCard);
 $('#idea-placement').on('click', '.delete-button', deleteIdea);
 $('#idea-placement').on('click', '.up-arrow', changeCardQuality); 
 $('#idea-placement').on('click', '.down-arrow', changeCardQuality); 
-$('#idea-placement').on('blur', '.entry-title', editableTitle);
-$('#idea-placement').on('blur', '.entry-body', editableBody); 
+$('#idea-placement').on('blur', '.entry-title', editableText);
+$('#idea-placement').on('blur', '.entry-body', editableText); 
 $('#search-field').on('keyup', search);
 
 //On load (should we condense variabeles?)
@@ -50,13 +50,11 @@ function getIdeaFromStorage(cardId) {
 function prependCard(object) {
   $('#idea-placement').prepend(
     `<article aria-label="Idea card" class="object-container" id="${object.id}">
-      <div class="flex-container">
-        <h2 class="entry-title" contenteditable="true">${object.title}</h2>
-        <div role="button" class="delete-button"></div>
-      </div>
+      <h2 class="entry-title" contenteditable="true">${object.title}</h2>
+      <input type="button" class="delete-button"></input>
       <p class="entry-body" contenteditable="true">${object.body}</p>
-      <div role="button" class="up-arrow" alt="upvote button" namd="upvote"></div>
-      <div role="button" class="down-arrow" alt="downvote button"></div>
+      <input type="button" class="up-arrow" alt="upvote button" name="upvote"></input>
+      <input type="button" class="down-arrow" alt="downvote button"></input>
       <p class="quality-rank">quality: 
         <span class="open-sans">${object.quality}</span>
       </p>
@@ -71,7 +69,7 @@ function clearInputs() {
 }
 
 function deleteIdea() {
-  var cardId = $(this).parent().parent().attr('id');
+  var cardId = $(this).parent().attr('id');
   localStorage.removeItem(cardId);
   $(this).closest('article').remove();
 }
@@ -98,42 +96,29 @@ function changeCardQuality() {
   var cardId = $(this).parents().attr('id'); //this is only used once so you can remove line to get under 8 lines
   var clickedBtn = $(this).attr('class');
   var currentCard = getIdeaFromStorage(cardId);
-
   if ((currentCard.quality !== 'Critical') && (clickedBtn === 'up-arrow')) {
     currentCard.quality = getNewCardQuality(currentCard.quality, clickedBtn);
   } else if ((currentCard.quality !== 'None') && (clickedBtn === 'down-arrow')) {
     currentCard.quality = getNewCardQuality(currentCard.quality, clickedBtn);
   }
-
   setInLocalStorage(cardId, currentCard)
   $(this).siblings('p').children().text(currentCard.quality);
 }
- 
-// function upvoteCardQuality() {
-//   var cardId = $(this).parents().attr('id');
-//   console.log($(this).attr('class'));
-//   var currentCard = getIdeaFromStorage(cardId);
 
-//   if (currentCard.quality !== 'Critical') {
-//     currentCard.quality = getNewCardQuality(currentCard.quality, 'upvote');
-//   }
 
-//   setInLocalStorage(cardId, currentCard)
-//   $(this).siblings('p').children().text(currentCard.quality);
-// }
-
-// function downvoteCardQuality() {
-//   var cardId = $(this).parents().attr('id');
-//   console.log($(this).attr('class'));
-//   var currentCard = getIdeaFromStorage(cardId);
-
-//   if (currentCard.quality !== 'None') {
-//     currentCard.quality = getNewCardQuality(currentCard.quality, 'downvote');
-//   }
-
-//   setInLocalStorage(cardId, currentCard)
-//   $(this).siblings('p').children().text(currentCard.quality);
-// }
+//// Editable doesn't work on enter key - only on click or tab out
+function editableText() {
+  var newText = $(this).text()
+  var changeLocation = $(this).attr('class')
+  var cardId = $(this).parents().attr('id');
+  var currentCard = getIdeaFromStorage(cardId);
+  if (changeLocation === 'entry-title') {
+    currentCard.title = newText;
+  } else if (changeLocation === 'entry-body') {
+    currentCard.body = newText;
+  }
+  setInLocalStorage(cardId, currentCard)
+}
 
 function search() {
   var searchInput = $('#search-field').val();
@@ -150,36 +135,3 @@ function search() {
   })
 };
 
-//// Editable doesn't work on enter key - only on click or tab out
-function editableTitle() {
-  var newTitle = $(this).text();
-  var cardId = $(this).parent().parent().attr('id');
-  var currentCard = getIdeaFromStorage(cardId)
-  currentCard.title = newTitle
-  setInLocalStorage(cardId, currentCard)
-}
-
-//// this function is super similar to the one above, seems like we could pass in an extra param for either body or text to do both in one. 
-function editableBody() {
-  var newBody = $(this).text();
-  var cardId = $(this).parent().attr('id');
-  var currentCard = getIdeaFromStorage(cardId)
-  currentCard.body = newBody
-  setInLocalStorage(cardId, currentCard)
-}
-
-// Expanding Text Area
-//// do this with the css/html 
-// var expandingTextArea = (function(){
-//   var textAreaTag = document.querySelectorAll('textarea')
-//   for (var i=0; i<textAreaTag.length; i++){
-//     textAreaTag[i].addEventListener('paste',autoExpand);
-//     textAreaTag[i].addEventListener('input',autoExpand);
-//     textAreaTag[i].addEventListener('keyup',autoExpand);
-//   }
-//   function autoExpand(e,el){
-//     var el = el || e.target;
-//     el.style.height = 'inherit';
-//     el.style.height = el.scrollHeight+'px';
-//   }
-// })
