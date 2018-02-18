@@ -3,8 +3,8 @@
 
 $('#save-btn').on('click', createCard);
 $('#idea-placement').on('click', '.delete-button', deleteIdea);
-$('#idea-placement').on('click', '.up-arrow', upvoteCardQuality); 
-$('#idea-placement').on('click', '.down-arrow', downvoteCardQuality); 
+$('#idea-placement').on('click', '.up-arrow', changeCardQuality); 
+$('#idea-placement').on('click', '.down-arrow', changeCardQuality); 
 $('#idea-placement').on('blur', '.entry-title', editableTitle);
 $('#idea-placement').on('blur', '.entry-body', editableBody); 
 $('#search-field').on('keyup', search);
@@ -21,7 +21,7 @@ $(document).ready(function() {
 function IdeaObjectCreator(title, body) {
   this.title = title;
   this.body = body;
-  this.quality = 'None';
+  this.quality = 'Normal';
   this.id = Date.now();
 }
 
@@ -55,7 +55,7 @@ function prependCard(object) {
         <div role="button" class="delete-button"></div>
       </div>
       <p class="entry-body" contenteditable="true">${object.body}</p>
-      <div role="button" class="up-arrow" alt="upvote button"></div>
+      <div role="button" class="up-arrow" alt="upvote button" namd="upvote"></div>
       <div role="button" class="down-arrow" alt="downvote button"></div>
       <p class="quality-rank">quality: 
         <span class="open-sans">${object.quality}</span>
@@ -87,36 +87,53 @@ function getNewCardQuality(currentQuality, voteDirection) {
     ]
 
   var currentQualityIndex = qualitiesArray.indexOf(currentQuality);
-  if (voteDirection === 'upvote') {
+  if (voteDirection === 'up-arrow') {
     return qualitiesArray[currentQualityIndex + 1]
-  } else if (voteDirection === 'downvote') {
+  } else if (voteDirection === 'down-arrow') {
     return qualitiesArray[currentQualityIndex - 1]
   }
 }
+
+function changeCardQuality() {
+  var cardId = $(this).parents().attr('id'); //this is only used once so you can remove line to get under 8 lines
+  var clickedBtn = $(this).attr('class');
+  var currentCard = getIdeaFromStorage(cardId);
+
+  if ((currentCard.quality !== 'Critical') && (clickedBtn === 'up-arrow')) {
+    currentCard.quality = getNewCardQuality(currentCard.quality, clickedBtn);
+  } else if ((currentCard.quality !== 'None') && (clickedBtn === 'down-arrow')) {
+    currentCard.quality = getNewCardQuality(currentCard.quality, clickedBtn);
+  }
+
+  setInLocalStorage(cardId, currentCard)
+  $(this).siblings('p').children().text(currentCard.quality);
+}
  
-function upvoteCardQuality() {
-  var cardId = $(this).parents().attr('id');
-  var currentCard = getIdeaFromStorage(cardId);
+// function upvoteCardQuality() {
+//   var cardId = $(this).parents().attr('id');
+//   console.log($(this).attr('class'));
+//   var currentCard = getIdeaFromStorage(cardId);
 
-  if (currentCard.quality !== 'Critical') {
-    currentCard.quality = getNewCardQuality(currentCard.quality, 'upvote');
-  }
+//   if (currentCard.quality !== 'Critical') {
+//     currentCard.quality = getNewCardQuality(currentCard.quality, 'upvote');
+//   }
 
-  setInLocalStorage(cardId, currentCard)
-  $(this).siblings('p').children().text(currentCard.quality);
-}
+//   setInLocalStorage(cardId, currentCard)
+//   $(this).siblings('p').children().text(currentCard.quality);
+// }
 
-function downvoteCardQuality() {
-  var cardId = $(this).parents().attr('id');
-  var currentCard = getIdeaFromStorage(cardId);
+// function downvoteCardQuality() {
+//   var cardId = $(this).parents().attr('id');
+//   console.log($(this).attr('class'));
+//   var currentCard = getIdeaFromStorage(cardId);
 
-  if (currentCard.quality !== 'None') {
-    currentCard.quality = getNewCardQuality(currentCard.quality, 'downvote');
-  }
-  
-  setInLocalStorage(cardId, currentCard)
-  $(this).siblings('p').children().text(currentCard.quality);
-}
+//   if (currentCard.quality !== 'None') {
+//     currentCard.quality = getNewCardQuality(currentCard.quality, 'downvote');
+//   }
+
+//   setInLocalStorage(cardId, currentCard)
+//   $(this).siblings('p').children().text(currentCard.quality);
+// }
 
 function search() {
   var searchInput = $('#search-field').val();
