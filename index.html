@@ -9,23 +9,20 @@
   </head>
   <body>
     <header>
-      <form>
+      <form class="todo-form">
         <!-- Change this logo to h1 with span -->
         <img class="logo" src="images/ideabox-logo.svg" alt="ideabox logo">
-        <!-- Add aria-labels -->
-        <input class="input-fields" id="title-field" type="text" name="titleInput" placeholder="Title of your idea" aria-required="true" aria-label="Idea title">
-        <!-- Empty name attribute -->
-        <textarea class="input-fields" id="body-field" type="text" name="bodyInput" placeholder="Write your idea here" aria-required="true" aria-label="Idea body"></textarea>
-        <input class="save-button" id="save-btn" type="submit" name="" value="save">
+        <input class="input-fields" id="title-field" type="text" placeholder="Title" aria-required="true" aria-label="Task title">
+        <textarea class="input-fields" id="task-field" type="text" placeholder="Task" aria-required="true" aria-label="Your task"></textarea>
+        <input class="save-button" id="save-btn" type="submit" value="save" aria-label="save button">
       </form>
     </header>
-    <section class="search-section">
+    <form class="filter-section">
       <!-- "Wrapper" is a vague class name -->
       <article class="wrapper">
-        <!-- Empty name attribute -->
-        <input id="search-field" class="input-fields" type="text" name="" placeholder="Search ideas">
+        <input id="filter-field" class="input-fields" type="text" placeholder="Filter ideas" aria-label="filter tasks field">
       </article>
-    </section>
+    </form>
     <section class="idea-section">
       <article class="wrapper" id="idea-placement">
       </article>
