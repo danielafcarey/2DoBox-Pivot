@@ -16,6 +16,7 @@ h2 {
   color: #6D6E71; 
   font-family: Roboto Slab;
   font-size: 20px;
+  display: inline-block;
 }
 
 header {
@@ -61,6 +62,9 @@ textarea::placeholder {
   background-image: url(../images/delete.svg);
   height: 25px;
   width:25px;
+  float: right;
+  border: none;
+
 }
 
 .delete-button:hover {
@@ -74,6 +78,7 @@ textarea::placeholder {
   margin-right: 10px;
   margin-top: 20px;
   width:25px;
+  border: none;
 }
 
 .down-arrow:hover {
@@ -87,6 +92,8 @@ textarea::placeholder {
   margin-right: 10px;
   margin-top: 20px;
   width:25px;
+  border: none;
+
 }
 
 .up-arrow:hover {
