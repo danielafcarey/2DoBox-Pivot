@@ -33,7 +33,7 @@ $(document).ready(function() {
 function TaskObjectCreator(title, task) {
   this.title = title;
   this.task = task;
-  this.importance = 'Normal';
+  this.importance = 'normal';
   this.id = Date.now();
 }
 function createCard(event) {
@@ -66,6 +66,7 @@ function prependCard(object) {
       <p class="importance-rank">importance: 
         <span class="open-sans">${object.importance}</span>
       </p>
+      <hr>
     </article>`
   );
 };  
@@ -82,11 +83,11 @@ function deleteCard() {
 }
 function getNewCardImportance(currentImportance, voteDirection) {
   var importanceLevelsArray = [
-    'None', 
-    'Low', 
-    'Normal',
-    'High',
-    'Critical'
+    'none', 
+    'low', 
+    'normal',
+    'high',
+    'critical'
     ]
   var currentImportanceIndex = importanceLevelsArray.indexOf(currentImportance);
   if (voteDirection === 'up-arrow') {
@@ -99,9 +100,9 @@ function changeCardImportance() {
   var cardId = $(this).parents().attr('id');
   var clickedBtn = $(this).attr('class');
   var currentCard = getTaskFromStorage(cardId);
-  if ((currentCard.importance !== 'Critical') && (clickedBtn === 'up-arrow')) {
+  if ((currentCard.importance !== 'critical') && (clickedBtn === 'up-arrow')) {
     currentCard.importance = getNewCardImportance(currentCard.importance, clickedBtn);
-  } else if ((currentCard.importance !== 'None') && (clickedBtn === 'down-arrow')) {
+  } else if ((currentCard.importance !== 'none') && (clickedBtn === 'down-arrow')) {
     currentCard.importance = getNewCardImportance(currentCard.importance, clickedBtn);
   }
   setInLocalStorage(cardId, currentCard)
