@@ -70,6 +70,19 @@ textarea::placeholder {
 }
 
 /*buttons*/
+.complete-task {
+  border: none;
+  float: right;
+  font-size: 15px;
+  margin-top: 28px;
+}
+
+.complete-task:hover {
+  color: #00a79d;
+  transform: scale(1.1);
+  font-weight: bold;
+}
+
 .delete-button {
   background-image: url(../images/delete.svg);
   height: 25px;

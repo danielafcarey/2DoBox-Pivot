@@ -59,13 +59,14 @@ function prependCard(object) {
   $('#card-placement').prepend(
     `<article aria-label="Task card" class="object-container" id="${object.id}">
       <h2 class="entry-title" contenteditable="true">${object.title}</h2>
-      <input type="button" class="delete-button"></input>
+      <input type="button" class="delete-button">
       <p class="entry-task" contenteditable="true">${object.task}</p>
-      <input type="button" class="up-arrow" alt="upvote button" name="upvote"></input>
-      <input type="button" class="down-arrow" alt="downvote button"></input>
+      <input type="button" class="up-arrow" aria-label="upvote button" name="upvote">
+      <input type="button" class="down-arrow" aria-label="downvote button">
       <p class="importance-rank">importance: 
         <span class="open-sans">${object.importance}</span>
       </p>
+      <input value="Mark as complete" type="button" class="complete-task" aria-label="complete-task">
       <hr>
     </article>`
   );
