@@ -17,11 +17,23 @@ h2 {
   font-family: Roboto Slab;
   font-size: 20px;
   display: inline-block;
+  width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
 }
 
 header {
   background-color: #E5F3F2;
   padding: 30px;
+}
+
+hr {
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #D1D3D4;
+  padding-bottom: 8px;
 }
 
 input {
