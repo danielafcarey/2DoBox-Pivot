@@ -4,10 +4,15 @@ $('#save-btn').on('click', createCard);
 $('#card-placement').on('click', '.delete-button', deleteCard);
 $('#card-placement').on('click', '.up-arrow', changeCardImportance); 
 $('#card-placement').on('click', '.down-arrow', changeCardImportance); 
-$('#card-placement').on('blur', '.entry-title', editableText);
-$('#card-placement').on('blur', '.entry-task', editableText); 
+$('#card-placement').on('blur', '.entry-title', editText);
+$('#card-placement').on('blur', '.entry-task', editText); 
+$('#card-placement').on('keydown', '.entry-title', saveOnEnterKey);
+$('#card-placement').on('keydown', '.entry-task', saveOnEnterKey);
 $('#filter-field').on('keyup', search);
 $('.todo-input').on('keyup', enableBtn);
+
+
+
 
 function enableBtn() {
   if ($('#title-field').val() !== '' && $('#task-field').val() !== '') {
@@ -103,7 +108,7 @@ function changeCardImportance() {
   $(this).siblings('p').children().text(currentCard.importance);
 }
 //// Editable doesn't work on enter key - only on click or tab out
-function editableText() {
+function editText() {
   var newText = $(this).text()
   var changeLocation = $(this).attr('class')
   var cardId = $(this).parents().attr('id');
@@ -115,6 +120,13 @@ function editableText() {
   }
   setInLocalStorage(cardId, currentCard)
 }
+
+function saveOnEnterKey(event) {
+  if (event.keyCode === 13) {
+       $(this).blur();
+   }
+}
+
 function search() {
   var searchInput = $('#filter-field').val();
   var searcher = new RegExp(searchInput, 'gim');
