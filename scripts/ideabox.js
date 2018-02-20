@@ -11,13 +11,33 @@ $('#card-placement').on('keydown', '.entry-task', saveOnEnterKey);
 $('#filter-field').on('keyup', search);
 $('.todo-input').on('keyup', enableBtn);
 $('#card-placement').on('click', '.complete-task', markAsComplete)
+$('.checked').on('click', filterImportance);
+$('.completed').on('click', showCompleted)
 
-function markAsComplete() {
-  var cardId = $(this).parents().attr('id');
-  var currentCard = getTaskFromStorage(cardId);
-  currentCard.completed = !currentCard.completed;
-  $(this).closest('article').toggleClass('marked-as-complete');
-  setInLocalStorage(cardId, currentCard);
+function showCompleted() {
+  $('.object-container').remove()
+  for (var i = 0; i < localStorage.length; i++) {
+    var retrievedTask = localStorage.getItem(localStorage.key(i));
+    var parsedTask = JSON.parse(retrievedTask);
+    if (parsedTask.completed === true && $(this).is(':checked')) {
+      prependCard(parsedTask);
+    } else if (parsedTask.completed === false) {
+      prependCard(parsedTask);
+    }
+  }
+}
+
+function filterImportance() {
+  var impLevelVal = $(this).val();
+  if ($(this).is(':checked')) {
+    $('.open-sans:contains("' + impLevelVal + '")').closest('.object-container').show();
+    $('.open-sans:not(:contains("'+ impLevelVal +'"))').closest('.object-container').hide();
+  } else {
+    $('.open-sans').closest('.object-container').show();
+  }
+  // if ($('.open-sans').val() === impLevelVal) {
+  //   $(this).closest()
+  // }
 }
 
 function enableBtn() {
@@ -31,13 +51,15 @@ function enableBtn() {
 //On load (should we condense variabeles?)
 $(document).ready(function() {
   for (var i = 0; i < localStorage.length; i++) {
-    var retrievedTasks = localStorage.getItem(localStorage.key(i));
-    var parsedTasks = JSON.parse(retrievedTasks);
-    if (parsedTasks.completed === false) {
-      prependCard(parsedTasks);
-    }
-  };
+    var retrievedTask = localStorage.getItem(localStorage.key(i));
+    var parsedTask = JSON.parse(retrievedTask);
+    prependCard(parsedTask);
+  } 
 })
+
+function hideCompleted(){
+
+}
 
 function TaskObjectCreator(title, task) {
   this.title = title;
@@ -46,6 +68,7 @@ function TaskObjectCreator(title, task) {
   this.id = Date.now();
   this.completed = false; //task comp
 }
+
 function createCard(event) {
   event.preventDefault();
   var inputTitleValue = $('#title-field').val();
@@ -55,16 +78,19 @@ function createCard(event) {
   prependCard(taskObject);
   clearInputs();
 }
+
 // Set/retrieve local storage. Should we shorten?
 function setInLocalStorage(cardId, updatedTaskObject) {
   var stringifiedTask = JSON.stringify(updatedTaskObject);
   localStorage.setItem(cardId, stringifiedTask);
 }
+
 function getTaskFromStorage(cardId) {
   var retrievedTasks = localStorage.getItem(cardId);
   var parsedTasks = JSON.parse(retrievedTasks);
   return parsedTasks;
 }
+
 function prependCard(object) {
   $('#card-placement').prepend(
     `<article aria-label="Task card" class="object-container" id="${object.id}">
@@ -80,18 +106,21 @@ function prependCard(object) {
       <hr>
     </article>`
   );
-};  
+};
+
 function clearInputs() {
   $('#title-field').val('');
   $('#task-field').val('');
   $('#title-field').focus();
   $('#save-btn').attr('disabled', true)
 }
+
 function deleteCard() {
   var cardId = $(this).parent().attr('id');
   localStorage.removeItem(cardId);
   $(this).closest('article').remove();
 }
+
 function getNewCardImportance(currentImportance, voteDirection) {
   var importanceLevelsArray = [
     'none', 
@@ -107,6 +136,7 @@ function getNewCardImportance(currentImportance, voteDirection) {
     return importanceLevelsArray[currentImportanceIndex - 1]
   }
 }
+
 function changeCardImportance() {
   var cardId = $(this).parents().attr('id');
   var clickedBtn = $(this).attr('class');
@@ -119,6 +149,7 @@ function changeCardImportance() {
   setInLocalStorage(cardId, currentCard)
   $(this).siblings('p').children().text(currentCard.importance);
 }
+
 //// Editable doesn't work on enter key - only on click or tab out
 function editText() {
   var newText = $(this).text()
@@ -154,4 +185,10 @@ function search() {
   })
 };
 
-
+function markAsComplete() {
+  var cardId = $(this).parents().attr('id');
+  var currentCard = getTaskFromStorage(cardId);
+  currentCard.completed = !currentCard.completed;
+  $(this).closest('article').toggleClass('marked-as-complete');
+  setInLocalStorage(cardId, currentCard);
+}
