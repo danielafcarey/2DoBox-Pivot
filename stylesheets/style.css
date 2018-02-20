@@ -193,6 +193,16 @@ textarea::placeholder {
   font-family: 'Open Sans', sans-serif;
 }
 
+/* filter buttons */
+.filter-checkboxes {
+  font-family: 'Open Sans', sans-serif;
+  margin-bottom: 10px;
+}
+
+.checked, .completed {
+  margin-right: 2.6%;
+}
+
 
 /*Media queries*/
 /*I think this many queries is unnecessary - causes weird UI with the breakpoints*/
