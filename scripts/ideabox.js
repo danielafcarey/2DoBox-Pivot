@@ -15,14 +15,24 @@ $('.checked').on('click', filterImportance);
 $('.completed').on('click', showCompleted)
 
 function showCompleted() {
+  enableBtn();
   $('.object-container').remove()
-  for (var i = 0; i < localStorage.length; i++) {
-    var retrievedTask = localStorage.getItem(localStorage.key(i));
-    var parsedTask = JSON.parse(retrievedTask);
-    if (parsedTask.completed === true && $(this).is(':checked')) {
-      prependCard(parsedTask);
-    } else if (parsedTask.completed === false) {
-      prependCard(parsedTask);
+  if ($(this).is(':checked')){
+    $('#save-btn').attr('disabled', true)
+    for (var i = 0; i < localStorage.length; i++) {
+      var retrievedTask = localStorage.getItem(localStorage.key(i));
+      var parsedTask = JSON.parse(retrievedTask);
+      if (parsedTask.completed === 'completed') {
+        prependCard(parsedTask);
+      } 
+    }
+  } else {
+      for (var i = 0; i < localStorage.length; i++) {
+      var retrievedTask = localStorage.getItem(localStorage.key(i));
+      var parsedTask = JSON.parse(retrievedTask);
+      if (parsedTask.completed === 'mark as complete') {
+        prependCard(parsedTask);
+      } 
     }
   }
 }
@@ -41,7 +51,7 @@ function filterImportance() {
 }
 
 function enableBtn() {
-  if ($('#title-field').val() !== '' && $('#task-field').val() !== '') {
+  if ($('#title-field').val() !== '' && $('#task-field').val() !== '' && $('#completed').is(':not(:checked)')) {
     $('#save-btn').attr('disabled', false)
   } else {
     $('#save-btn').attr('disabled', true)
@@ -53,20 +63,18 @@ $(document).ready(function() {
   for (var i = 0; i < localStorage.length; i++) {
     var retrievedTask = localStorage.getItem(localStorage.key(i));
     var parsedTask = JSON.parse(retrievedTask);
-    prependCard(parsedTask);
+    if (parsedTask.completed === 'mark as complete') {
+      prependCard(parsedTask);
+    }
   } 
 })
-
-function hideCompleted(){
-
-}
 
 function TaskObjectCreator(title, task) {
   this.title = title;
   this.task = task;
   this.importance = 'normal';
   this.id = Date.now();
-  this.completed = false; //task comp
+  this.completed = 'mark as complete'; //task comp
 }
 
 function createCard(event) {
@@ -102,7 +110,7 @@ function prependCard(object) {
       <p class="importance-rank">importance: 
         <span class="open-sans">${object.importance}</span>
       </p>
-      <input value="Mark as complete" type="button" class="complete-task" aria-label="complete-task">
+      <input value="${object.completed}" name="complete-button" type="button" class="complete-task" aria-label="complete-task">
       <hr>
     </article>`
   );
@@ -188,7 +196,14 @@ function search() {
 function markAsComplete() {
   var cardId = $(this).parents().attr('id');
   var currentCard = getTaskFromStorage(cardId);
-  currentCard.completed = !currentCard.completed;
-  $(this).closest('article').toggleClass('marked-as-complete');
+  if (currentCard.completed === 'mark as complete') {
+    currentCard.completed = 'completed';
+    $(this).attr('value', 'completed');
+    $(this).closest('article').toggleClass('marked-as-complete');
+  } 
+  // else {
+  //   currentCard.completed = 'mark as complete';
+  // }
+
   setInLocalStorage(cardId, currentCard);
 }
