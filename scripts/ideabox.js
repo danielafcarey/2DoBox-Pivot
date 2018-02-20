@@ -10,9 +10,15 @@ $('#card-placement').on('keydown', '.entry-title', saveOnEnterKey);
 $('#card-placement').on('keydown', '.entry-task', saveOnEnterKey);
 $('#filter-field').on('keyup', search);
 $('.todo-input').on('keyup', enableBtn);
+$('#card-placement').on('click', '.complete-task', markAsComplete)
 
-
-
+function markAsComplete() {
+  var cardId = $(this).parents().attr('id');
+  var currentCard = getTaskFromStorage(cardId);
+  currentCard.completed = !currentCard.completed;
+  $(this).closest('article').toggleClass('marked-as-complete');
+  setInLocalStorage(cardId, currentCard);
+}
 
 function enableBtn() {
   if ($('#title-field').val() !== '' && $('#task-field').val() !== '') {
@@ -27,14 +33,18 @@ $(document).ready(function() {
   for (var i = 0; i < localStorage.length; i++) {
     var retrievedTasks = localStorage.getItem(localStorage.key(i));
     var parsedTasks = JSON.parse(retrievedTasks);
-    prependCard(parsedTasks);
+    if (parsedTasks.completed === false) {
+      prependCard(parsedTasks);
+    }
   };
 })
+
 function TaskObjectCreator(title, task) {
   this.title = title;
   this.task = task;
   this.importance = 'normal';
   this.id = Date.now();
+  this.completed = false; //task comp
 }
 function createCard(event) {
   event.preventDefault();
