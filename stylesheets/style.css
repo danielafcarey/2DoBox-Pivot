@@ -83,6 +83,10 @@ textarea::placeholder {
   font-weight: bold;
 }
 
+.marked-as-complete {
+  opacity: .5;
+}
+
 .delete-button {
   background-image: url(../images/delete.svg);
   height: 25px;
