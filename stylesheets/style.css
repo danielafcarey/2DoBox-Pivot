@@ -3,11 +3,6 @@
   box-sizing: border-box; 
 }
 
-.todo-form {
-  margin: auto;
-  width: 50%;
-}
-
 h1 {
   font-family: Roboto Slab;
   font-size: 70px;
@@ -15,10 +10,6 @@ h1 {
   display: block;
   margin: 30px;
   text-align: center;
-}
-
-.box-styling {
-  color: #6d6e71;
 }
 
 h2 {
@@ -49,7 +40,6 @@ input {
   color: #6D6E71;
 }
 
-/*Placeholder text not to spec - size and weight*/
 input::placeholder {
   opacity: .5;
 }
@@ -72,13 +62,15 @@ textarea::placeholder {
   padding-top: 5px;
 }
 
-.flex-container {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 25px;
+.box-styling {
+  color: #6d6e71;
 }
 
-/*buttons*/
+.checked, 
+.completed {
+  margin-right: 2.6%;
+}
+
 .complete-task {
   border: none;
   float: right;
@@ -93,17 +85,12 @@ textarea::placeholder {
   cursor: pointer;
 }
 
-.marked-as-complete {
-  opacity: .5;
-}
-
 .delete-button {
   background-image: url(../images/delete.svg);
   height: 25px;
   width:25px;
   float: right;
   border: none;
-
 }
 
 .delete-button:hover {
@@ -126,45 +113,30 @@ textarea::placeholder {
   cursor: pointer;
 }
 
-.up-arrow {
-  background-image: url(../images/upvote.svg);
+.filter-checkboxes {
+  font-family: 'Open Sans', sans-serif;
+  padding-bottom: 10px;
+  color: #6D6E71;
+}
+
+.filter-section {
+  padding: 30px 30px 0px 30px;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+}
+
+.importance-rank {
   display: inline-block;
-  height: 25px;
-  margin-right: 10px;
-  vertical-align: middle;
-  width:25px;
-  border: none;
-}
-
-.up-arrow:hover {
-  background-image: url(../images/upvote-hover.svg);
-  cursor: pointer;
-}
-
-.save-button {
-  background-color: #00A79D;
-  border: none;
-  box-shadow: 0px 4px 16px -5px rgba(0,0,0,0.75);
-  color: #FFFFFF;
-  /*It should have sans-serif font*/
   font-family:'Roboto Slab', serif;
-  font-size: 20px;
-  height: 40px;
-  padding: 5px;
-  text-align: center;
-  width: 100%;
-
-}
-
-.save-button:hover {
-  background-color: #045E55;
-  cursor: pointer;
-}
-
-.save-button:disabled {
-  background-color: #939598;
-  cursor: pointer;
-}
+  font-size: 18px;
+  margin-bottom: 15px;
+  vertical-align: middle;
+  margin-top: 14px;
+} 
 
 .input-fields {
   border: solid 2px #D1D3D4;
@@ -177,41 +149,8 @@ textarea::placeholder {
   width: 100%;
 }
 
-.filter-section {
-  padding: 30px 30px 0px 30px;
-}
-.todo-section {
-  padding: 0 30px 30px 30px;
-}
-.wrapper {
-  margin: auto;
-  width: 50%;
-}
-
-/*Not aligned with vote buttons*/
-.importance-rank {
-  display: inline-block;
-  font-family:'Roboto Slab', serif;
-  font-size: 18px;
-  margin-bottom: 15px;
-  vertical-align: middle;
-  margin-top: 14px;
-} 
-
-/*fix this styling/class-naming*/
-.open-sans {
-  font-family: 'Open Sans', sans-serif;
-}
-
-/* filter buttons */
-.filter-checkboxes {
-  font-family: 'Open Sans', sans-serif;
-  margin-bottom: 10px;
-  color: #6D6E71;
-}
-
-.checked, .completed {
-  margin-right: 2.6%;
+.marked-as-complete {
+  opacity: .5;
 }
 
 .more-cards-button {
@@ -230,41 +169,93 @@ textarea::placeholder {
   cursor: pointer;
 }
 
+.open-sans {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.save-button {
+  background-color: #00A79D;
+  border: none;
+  box-shadow: 0px 4px 16px -5px rgba(0,0,0,0.75);
+  color: #FFFFFF;
+  /*It should have sans-serif font*/
+  font-family:'Roboto Slab', serif;
+  font-size: 20px;
+  height: 40px;
+  padding: 5px;
+  text-align: center;
+  width: 100%;
+}
+
+.save-button:disabled {
+  background-color: #939598;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background-color: #045E55;
+  cursor: pointer;
+}
+
 .show-button-container {
   display: flex;
 }
 
+.todo-form {
+  margin: auto;
+  width: 50%;
+}
 
-/*Media queries*/
-/*I think this many queries is unnecessary - causes weird UI with the breakpoints*/
+.todo-section {
+  padding: 0 30px 30px 30px;
+}
 
-/*1024 (ipad Pro) view is a little zoomed out*/
+.up-arrow {
+  background-image: url(../images/upvote.svg);
+  display: inline-block;
+  height: 25px;
+  margin-right: 10px;
+  vertical-align: middle;
+  width:25px;
+  border: none;
+}
+
+.up-arrow:hover {
+  background-image: url(../images/upvote-hover.svg);
+  cursor: pointer;
+}
+
+.wrapper {
+  margin: auto;
+  width: 50%;
+}
+
 @media only screen and (max-width: 1000px) {
-  .wrapper {
+  .todo-form {
     width: 65%;
   }
-  .todo-form {
+
+  .wrapper {
     width: 65%;
   }
 
 }
 
 @media only screen and (max-width: 750px) {
-  .wrapper {
+  .todo-form {
     width: 80%;
   }
-  .todo-form {
+
+  .wrapper {
     width: 80%;
   }
 
 }
 
 @media only screen and (max-width: 550px) {
-  .wrapper {
-    width: 90%;
-  }
-  .todo-form {
-    width: 90%;
+  .complete-task {
+    font-size: 12px;
+    margin-top: 17px;
   }
 
   h1 {
@@ -275,20 +266,26 @@ textarea::placeholder {
     font-size: 14px;
   }
 
-  .complete-task {
-    font-size: 12px;
-    margin-top: 17px;
+  .wrapper {
+    width: 90%;
+  }
+
+  .todo-form {
+    width: 90%;
+  }
+
 
 }
 
 @media only screen and (max-width: 420px) {
+  .complete-task {
+    float: none;
+    margin-top: 0;
+  }
+
   .up-arrow,
   .down-arrow {
     margin-right: 0;
   }
 
-  .complete-task {
-    float: none;
-    margin-top: 0;
-  }
 }
