@@ -68,7 +68,7 @@ $(document).ready(function() {
       prependCard(parsedTask);
     }
   } 
-  showTenCards();
+  $('.object-container:gt(9)').hide()
 })
 
 function TaskObjectCreator(title, task) {
@@ -210,15 +210,9 @@ function markAsComplete() {
   setInLocalStorage(cardId, currentCard);
 }
 
-function showTenCards() {
-  $('.object-container:gt(9)').hide()
-  console.log($('.object-container').size());
-}
-
 function showTenMoreCards() {
   var cardListSize = $('.object-container').size();
   var hiddenCardListSize = $('.object-container:hidden').size();
-  console.log(hiddenCardListSize);
   $('.object-container').show()
   var amountToShow = cardListSize - hiddenCardListSize + 9
   $(`.object-container:gt(${amountToShow})`).hide();

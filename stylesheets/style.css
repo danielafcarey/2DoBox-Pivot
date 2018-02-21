@@ -81,6 +81,7 @@ textarea::placeholder {
   color: #00a79d;
   transform: scale(1.1);
   font-weight: bold;
+  cursor: pointer;
 }
 
 .marked-as-complete {
@@ -98,6 +99,7 @@ textarea::placeholder {
 
 .delete-button:hover {
   background-image: url(../images/delete-hover.svg);
+  cursor: pointer;
 }
 
 .down-arrow {
@@ -112,6 +114,7 @@ textarea::placeholder {
 
 .down-arrow:hover {
   background-image: url(../images/downvote-hover.svg);
+  cursor: pointer;
 }
 
 .up-arrow {
@@ -127,6 +130,7 @@ textarea::placeholder {
 
 .up-arrow:hover {
   background-image: url(../images/upvote-hover.svg);
+  cursor: pointer;
 }
 
 .save-button {
@@ -146,10 +150,12 @@ textarea::placeholder {
 
 .save-button:hover {
   background-color: #045E55;
+  cursor: pointer;
 }
 
 .save-button:disabled {
   background-color: gray;
+  cursor: pointer;
 }
 
 .input-fields {
@@ -197,10 +203,31 @@ textarea::placeholder {
 .filter-checkboxes {
   font-family: 'Open Sans', sans-serif;
   margin-bottom: 10px;
+  color: #6D6E71;
 }
 
 .checked, .completed {
   margin-right: 2.6%;
+}
+
+.more-cards-button {
+  border: none;
+  color: #6D6E71;
+  font-size: 15px;
+  margin-top: 28px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.more-cards-button:hover {
+  color: #00a79d;
+  transform: scale(1.1);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.show-button-container {
+  display: flex;
 }
 
 
