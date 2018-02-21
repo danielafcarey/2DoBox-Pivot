@@ -16,27 +16,20 @@ $('.completed').on('click', showCompleted);
 $('.more-cards-button').on('click', showTenMoreCards);
 
 function showCompleted() {
-  enableBtn();
-  $('.object-container').remove()
-  if ($(this).is(':checked')){
-    $('#save-btn').attr('disabled', true)
-    for (var i = 0; i < localStorage.length; i++) {
-      var retrievedTask = localStorage.getItem(localStorage.key(i));
-      var parsedTask = JSON.parse(retrievedTask);
-      if (parsedTask.completed === 'completed') {
-        prependCard(parsedTask);
-      } 
+enableBtn();
+$('.object-container').remove();
+for (var i = 0; i < localStorage.length; i++) {
+  var retrievedTask = localStorage.getItem(localStorage.key(i));
+  var parsedTask = JSON.parse(retrievedTask);
+  if ($(this).is(':checked') && parsedTask.completed === 'completed') {
+    $('#save-btn').attr('disabled', true);
+    prependCard(parsedTask);
+  } else if ($(this).is(':not(:checked)') && parsedTask.completed === 'mark as complete'){
+    prependCard(parsedTask);
     }
-  } else {
-      for (var i = 0; i < localStorage.length; i++) {
-      var retrievedTask = localStorage.getItem(localStorage.key(i));
-      var parsedTask = JSON.parse(retrievedTask);
-      if (parsedTask.completed === 'mark as complete') {
-        prependCard(parsedTask);
-      } 
-    }
-  }
+  } 
 }
+       
 
 function filterImportance() {
   var impLevelVal = $(this).val();
