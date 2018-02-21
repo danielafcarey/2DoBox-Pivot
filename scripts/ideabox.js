@@ -12,7 +12,8 @@ $('#filter-field').on('keyup', search);
 $('.todo-input').on('keyup', enableBtn);
 $('#card-placement').on('click', '.complete-task', markAsComplete)
 $('.checked').on('click', filterImportance);
-$('.completed').on('click', showCompleted)
+$('.completed').on('click', showCompleted);
+$('.more-cards-button').on('click', showTenMoreCards);
 
 function showCompleted() {
   enableBtn();
@@ -67,6 +68,7 @@ $(document).ready(function() {
       prependCard(parsedTask);
     }
   } 
+  showTenCards();
 })
 
 function TaskObjectCreator(title, task) {
@@ -207,3 +209,20 @@ function markAsComplete() {
 
   setInLocalStorage(cardId, currentCard);
 }
+
+function showTenCards() {
+  $('.object-container:gt(9)').hide()
+  console.log($('.object-container').size());
+}
+
+function showTenMoreCards() {
+  var cardListSize = $('.object-container').size();
+  var hiddenCardListSize = $('.object-container:hidden').size();
+  console.log(hiddenCardListSize);
+  $('.object-container').show()
+  var amountToShow = cardListSize - hiddenCardListSize + 9
+  $(`.object-container:gt(${amountToShow})`).hide();
+}
+
+
+
