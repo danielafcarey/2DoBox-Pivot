@@ -2,8 +2,9 @@
 $('#save-btn').on('click', createCard);
 $('.todo-input').on('keyup', enableBtn);
 $('.completed').on('click', showCompleted);
-$('#filter-field').on('keyup', search);
+$('#filter-field').on('keyup', filterCards);
 $('.checked').on('click', filterImportance);
+$('.checked').on('click', toggleShowMoreButton);
 $('#card-placement').on('click', '.delete-button', deleteCard);
 $('#card-placement').on('click', '.up-arrow', changeCardImportance); 
 $('#card-placement').on('click', '.down-arrow', changeCardImportance); 
@@ -151,14 +152,14 @@ function saveOnEnterKey(event) {
   }
 };
 
-function search() {
-  var searchInput = $('#filter-field').val();
-  var searcher = new RegExp(searchInput, 'gim');
+function filterCards() {
+  var filterInputValue = $('#filter-field').val();
+  var filterObject = new RegExp(filterInputValue, 'gim');
 
   $('.object-container').each(function() {
     var title = $(this).find(".entry-title").text();
     var task = $(this).find(".entry-task").text();
-    var match = (title.match(searcher) || task.match(searcher));
+    var match = (title.match(filterObject) || task.match(filterObject));
     if (!match) {
       $(this).hide();
     } else {
@@ -211,7 +212,15 @@ function filterImportance() {
     $('.open-sans:contains("' + impLevelVal + '")').closest('.object-container').show();
     $('.open-sans:not(:contains("' + impLevelVal + '"))').closest('.object-container').hide();
   } else {
-    $('.open-sans').closest('.object-container').show();
+    $('.open-sans').closest('.object-container:lt(10)').show();
+  }
+};
+
+function toggleShowMoreButton() {
+  if ($(this).is(':checked')) {
+    $('.more-cards-button').hide();
+  } else {
+    $('.more-cards-button').show();
   }
 };
 
