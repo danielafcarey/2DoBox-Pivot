@@ -1,21 +1,22 @@
 
+$(document).ready(populateTaskList);
 $('#save-btn').on('click', createCard);
-$('.todo-input').on('keyup', enableBtn);
+$('.todo-input').on('keyup', toggleDisableOnSaveBtn);
 $('.completed').on('click', showCompleted);
 $('#filter-field').on('keyup', getFilterInputObject);
 $('.checked').on('click', getBoxesChecked);
-$('.checked').on('click', toggleShowMoreButton);
 $('#card-placement').on('click', '.delete-button', deleteCard);
 $('#card-placement').on('click', '.up-arrow', changeCardImportance); 
 $('#card-placement').on('click', '.down-arrow', changeCardImportance); 
-$('#card-placement').on('blur', '.entry-title', editText);
-$('#card-placement').on('blur', '.entry-task', editText); 
+$('#card-placement').on('blur', '.entry-title', editTextInLocalStorage);
+$('#card-placement').on('blur', '.entry-task', editTextInLocalStorage); 
 $('#card-placement').on('keydown', '.entry-title', saveOnEnterKey);
 $('#card-placement').on('keydown', '.entry-task', saveOnEnterKey);
 $('#card-placement').on('click', '.complete-task', markAsComplete);
 $('.more-cards-button').on('click', showTenMoreCards);
 
-$(document).ready(function() {
+//took out unnamed function and moved doc.ready to top of event listeners
+function populateTaskList() {
   for (var i = 0; i < localStorage.length; i++) {
     var retrievedTask = localStorage.getItem(localStorage.key(i));
     var parsedTask = JSON.parse(retrievedTask);
@@ -24,9 +25,10 @@ $(document).ready(function() {
     }
   } 
   $('.object-container:gt(9)').hide();
-});
+};
 
-function enableBtn() {
+//changed name of this function 
+function toggleDisableOnSaveBtn() { 
   if ($('#title-field').val() !== '' && $('#task-field').val() !== '' && $('#completed').is(':not(:checked)')) {
     $('#save-btn').attr('disabled', false)
   } else {
@@ -89,7 +91,7 @@ function clearInputs() {
   $('#title-field').val('');
   $('#task-field').val('');
   $('#title-field').focus();
-  enableBtn();
+  toggleDisableOnSaveBtn();
 };
 
 function deleteCard() {
@@ -131,7 +133,8 @@ function getNewCardImportance(currentImportance, voteDirection) {
   }
 };
 
-function editText() {
+//changed this function name to be clear what we're editing (the text in storage, not on page)
+function editTextInLocalStorage() {
   var newText = $(this).text()
   var changeLocation = $(this).attr('class')
   var cardId = $(this).parents().attr('id');
@@ -197,7 +200,7 @@ function showCompleted() {
     }
   } 
 
-  enableBtn();
+  toggleDisableOnSaveBtn();
 };     
 
 function getBoxesChecked() {
@@ -211,10 +214,11 @@ function getBoxesChecked() {
     }
   }
 
-  showFilteredList(boxesCheckedArray);
-}
+  showCheckboxFilteredList(boxesCheckedArray);
+};
 
-function showFilteredList(boxesCheckedArray) {
+// changed naming of this to be clear it's the checkbox filter, not input filter
+function showCheckboxFilteredList(boxesCheckedArray) {
   if (boxesCheckedArray.length !== 0) { 
     $('.object-container').hide();
     boxesCheckedArray.forEach(function(boxChecked) { 
@@ -222,7 +226,8 @@ function showFilteredList(boxesCheckedArray) {
         $('.set-importance:contains("' + boxChecked + '")').closest('.object-container').show(); 
       }
     });
-  }
+  } 
+  toggleShowMoreButton(boxesCheckedArray)
 };
 
 function showTenMoreCards() {
@@ -234,8 +239,9 @@ function showTenMoreCards() {
   $(`.object-container:gt(${amountToShow})`).hide();
 };
 
-function toggleShowMoreButton() {
-  if ($(this).is(':checked')) {
+// changed this to run with showCheckboxFilteredList function instead of on event listener
+function toggleShowMoreButton(boxesCheckedArray) {
+  if (boxesCheckedArray.length !== 0) {
     $('.more-cards-button').hide();
   } else {
     $('.more-cards-button').show();
