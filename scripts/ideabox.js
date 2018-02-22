@@ -15,7 +15,6 @@ $('#card-placement').on('keydown', '.entry-task', saveOnEnterKey);
 $('#card-placement').on('click', '.complete-task', markAsComplete);
 $('.more-cards-button').on('click', showTenMoreCards);
 
-//took out unnamed function and moved doc.ready to top of event listeners
 function populateTaskList() {
   for (var i = 0; i < localStorage.length; i++) {
     var retrievedTask = localStorage.getItem(localStorage.key(i));
@@ -27,7 +26,6 @@ function populateTaskList() {
   $('.object-container:gt(9)').hide();
 };
 
-//changed name of this function 
 function toggleDisableOnSaveBtn() { 
   if ($('#title-field').val() !== '' && $('#task-field').val() !== '' && $('#completed').is(':not(:checked)')) {
     $('#save-btn').attr('disabled', false)
@@ -133,7 +131,6 @@ function getNewCardImportance(currentImportance, voteDirection) {
   }
 };
 
-//changed this function name to be clear what we're editing (the text in storage, not on page)
 function editTextInLocalStorage() {
   var newText = $(this).text()
   var changeLocation = $(this).attr('class')
@@ -217,7 +214,6 @@ function getBoxesChecked() {
   showCheckboxFilteredList(boxesCheckedArray);
 };
 
-// changed naming of this to be clear it's the checkbox filter, not input filter
 function showCheckboxFilteredList(boxesCheckedArray) {
   if (boxesCheckedArray.length !== 0) { 
     $('.object-container').hide();
@@ -239,7 +235,6 @@ function showTenMoreCards() {
   $(`.object-container:gt(${amountToShow})`).hide();
 };
 
-// changed this to run with showCheckboxFilteredList function instead of on event listener
 function toggleShowMoreButton(boxesCheckedArray) {
   if (boxesCheckedArray.length !== 0) {
     $('.more-cards-button').hide();
