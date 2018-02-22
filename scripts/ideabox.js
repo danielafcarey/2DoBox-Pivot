@@ -75,7 +75,7 @@ function prependCard(object) {
       <input type="button" class="up-arrow" aria-label="upvote button" name="upvote">
       <input type="button" class="down-arrow" aria-label="downvote button">
       <p class="importance-rank">importance: 
-        <span class="open-sans">${object.importance}</span>
+        <span class="set-importance">${object.importance}</span>
       </p>
       <input value="${object.completed}" name="complete-button" type="button" class="complete-task" aria-label="complete-task">
       <hr>
@@ -209,10 +209,10 @@ function filterImportance() {
   var impLevelVal = $(this).val();
 
   if ($(this).is(':checked')) {
-    $('.open-sans:contains("' + impLevelVal + '")').closest('.object-container').show();
-    $('.open-sans:not(:contains("' + impLevelVal + '"))').closest('.object-container').hide();
+    $('.set-importance:contains("' + impLevelVal + '")').closest('.object-container').show();
+    $('.set-importance:not(:contains("' + impLevelVal + '"))').closest('.object-container').hide();
   } else {
-    $('.open-sans').closest('.object-container:lt(10)').show();
+    $('.set-importance').closest('.object-container:lt(10)').show();
   }
 };
 
