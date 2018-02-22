@@ -2,8 +2,8 @@
 $('#save-btn').on('click', createCard);
 $('.todo-input').on('keyup', enableBtn);
 $('.completed').on('click', showCompleted);
-$('#filter-field').on('keyup', filterCards);
-$('.checked').on('click', filterImportance);
+$('#filter-field').on('keyup', getFilterInputObject);
+$('.checked').on('click', getBoxesChecked);
 $('.checked').on('click', toggleShowMoreButton);
 $('#card-placement').on('click', '.delete-button', deleteCard);
 $('#card-placement').on('click', '.up-arrow', changeCardImportance); 
@@ -152,21 +152,25 @@ function saveOnEnterKey(event) {
   }
 };
 
-function filterCards() {
+function getFilterInputObject() {
   var filterInputValue = $('#filter-field').val();
-  var filterObject = new RegExp(filterInputValue, 'gim');
+  var filterInputObject = new RegExp(filterInputValue, 'gim');
 
+  showInputFilteredCards(filterInputObject);
+};
+
+function showInputFilteredCards(filterInputObject) {
   $('.object-container').each(function() {
-    var title = $(this).find(".entry-title").text();
-    var task = $(this).find(".entry-task").text();
-    var match = (title.match(filterObject) || task.match(filterObject));
+    var title = $(this).find('.entry-title').text();
+    var task = $(this).find('.entry-task').text();
+    var match = (title.match(filterInputObject) || task.match(filterInputObject));
     if (!match) {
       $(this).hide();
     } else {
       $(this).show();
     }
   });
-};
+}
 
 function markAsComplete() {
   var cardId = $(this).parents().attr('id');
@@ -179,15 +183,6 @@ function markAsComplete() {
   }
 
   setInLocalStorage(cardId, currentCard);
-};
-
-function showTenMoreCards() {
-  var cardListSize = $('.object-container').size();
-  var hiddenCardListSize = $('.object-container:hidden').size();
-  var amountToShow = cardListSize - hiddenCardListSize + 9
-
-  $('.object-container').show()
-  $(`.object-container:gt(${amountToShow})`).hide();
 };
 
 function showCompleted() {
@@ -205,15 +200,38 @@ function showCompleted() {
   enableBtn();
 };     
 
-function filterImportance() {
-  var impLevelVal = $(this).val();
+function getBoxesChecked() {
+  var boxesCheckedArray = [];
+  var allFilters = $('.filter-checkboxes').children('input');
+  $('.object-container:lt(10)').show();
 
-  if ($(this).is(':checked')) {
-    $('.set-importance:contains("' + impLevelVal + '")').closest('.object-container').show();
-    $('.set-importance:not(:contains("' + impLevelVal + '"))').closest('.object-container').hide();
-  } else {
-    $('.set-importance').closest('.object-container:lt(10)').show();
+  for (var i = 0; i < allFilters.length; i++) { 
+    if (allFilters[i].checked) { 
+      boxesCheckedArray.push(allFilters[i].value); 
+    }
   }
+
+  showFilteredList(boxesCheckedArray);
+}
+
+function showFilteredList(boxesCheckedArray) {
+  if (boxesCheckedArray.length !== 0) { 
+    $('.object-container').hide();
+    boxesCheckedArray.forEach(function(boxChecked) { 
+      for (var i = 0; i < $('.object-container').length; i++) { 
+        $('.set-importance:contains("' + boxChecked + '")').closest('.object-container').show(); 
+      }
+    });
+  }
+};
+
+function showTenMoreCards() {
+  var cardListSize = $('.object-container').size();
+  var hiddenCardListSize = $('.object-container:hidden').size();
+  var amountToShow = cardListSize - hiddenCardListSize + 9
+
+  $('.object-container').show()
+  $(`.object-container:gt(${amountToShow})`).hide();
 };
 
 function toggleShowMoreButton() {
