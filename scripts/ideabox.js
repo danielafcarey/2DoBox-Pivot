@@ -170,7 +170,7 @@ function showInputFilteredCards(filterInputObject) {
       $(this).show();
     }
   });
-}
+};
 
 function markAsComplete() {
   var cardId = $(this).parents().attr('id');
